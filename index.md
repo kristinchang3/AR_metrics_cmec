@@ -13,7 +13,6 @@ hv-loader:
 
 This is an internal test page with an interactive data visualization.
 
-[Link to Bo's test page](./bo/bo_index.html)
 </div>
 <div style="text-align: center;" markdown="1">
 # AR Regions 
