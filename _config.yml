@@ -1,0 +1,9 @@
+title: Peak Season CMEC Test Page
+#logo: /assets/img/logo.png
+description: Internal test page for interactive data visualization.
+show_downloads: false
+repository: kristinchang3/peak_season_cmec
+#google_analytics:
+remote_theme: pages-themes/minimal
+plugins:
+  - jekyll-remote-theme

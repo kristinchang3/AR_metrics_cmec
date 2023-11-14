@@ -1,0 +1,112 @@
+{
+    "DIMENSIONS": {
+        "dimensions": {
+            "model": {
+                "BCC-CSM2-MR": {},
+                "CanESM2": {},
+                "CSIRO-Mk3-6-0": {},
+                "NorESM1-M": {},
+                "MRI-ESM2-0": {},
+                "ERA5": {},
+                "MERRA2": {}
+            },
+            "varname": {
+                "peak season": {}
+            }
+        },
+        "json_structure": [
+            "model",
+            "varname"
+        ]
+    },
+    "SCHEMA": {
+        "name": "CMEC",
+        "package": "PMP",
+        "version": "v1"
+    },
+    "provenance": {
+        "platform": {
+            "OS": "Darwin",
+            "Version": "22.6.0",
+            "Name": "ml-9954906"
+        },
+        "userId": "dong12",
+        "osAccess": false,
+        "commandLine": "/Users/dong12/mambaforge/envs/M1/lib/python3.9/site-packages/ipykernel_launcher.py -f /Users/dong12/Library/Jupyter/runtime/kernel-cac560f2-08c1-456d-8f0d-7d1d9c1aac12.json",
+        "date": "2023-09-06 15:37:45",
+        "conda": {
+            "Version": "23.1.0",
+            "buildVersion": "not installed",
+            "PythonVersion": "3.10.10.final.0",
+            "Platform": "osx-64"
+        },
+        "packages": {
+            "blas": "0.3.21",
+            "cdat_info": "8.2.1",
+            "cdms": "3.1.5",
+            "cdp": "1.7.0",
+            "cdtime": "3.1.4",
+            "cdutil": "8.2.1",
+            "esmf": "0.7.1",
+            "esmpy": "8.4.1",
+            "genutil": "8.2.1",
+            "python": "3.9.16",
+            "lapack": "3.9.0",
+            "numpy": "1.22.4",
+            "clapack": null,
+            "mesalib": null,
+            "uvcdat": null,
+            "vcs": null,
+            "vtk": null,
+            "xarray": "2023.3.0",
+            "scipy": "1.10.1",
+            "xcdat": "0.5.0",
+            "matplotlib": null,
+            "PMP": "v3.0.2-11-g06b151f",
+            "PMPObs": "See 'References' key below, for detailed obs provenance information."
+        },
+        "openGL": {
+            "vendor": "Apple",
+            "renderer": "Apple M1",
+            "version": "2.1 Metal - 83.1",
+            "shading language version": "1.20",
+            "GLX": {
+                "server": {
+                    "vendor": "SGI",
+                    "version": "1.4"
+                },
+                "client": {
+                    "vendor": "Mesa Project and SGI",
+                    "version": "1.4"
+                },
+                "version": "1.4"
+            }
+        }
+    },
+    "Variable": {},
+    "References": {},
+    "json_version": 3.0,
+    "RESULTS": {
+        "BCC-CSM2-MR": {
+            "peak season": 6
+        },
+        "CanESM2": {
+            "peak season": 17
+        },
+        "CSIRO-Mk3-6-0": {
+            "peak season": -4
+        },
+        "NorESM1-M": {
+            "peak season": 1
+        },
+        "MRI-ESM2-0": {
+            "peak season": -3
+        },
+        "ERA5": {
+            "peak season": 14
+        },
+        "MERRA2": {
+            "peak season": 11
+        }
+    }
+}
