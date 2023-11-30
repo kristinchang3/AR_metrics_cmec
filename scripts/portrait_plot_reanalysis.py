@@ -88,25 +88,15 @@ hover = HoverTool(tooltips="""
 # Use number of models and regions to determine cell size
 num_models = len(dd['model'].unique())
 num_regions = len(dd['region'].unique())
-
-cell_width = 1/num_models
-cell_height = 1/num_regions
-
-# set desired figure size
-desired_width = 2000
-desired_height = 2000
-
-# calculate final width and height based on above parameters
-adjusted_width = round(int(cell_width * desired_width), -1)
-adjusted_height = round(int(cell_height * desired_height), -1)
+aspect_ratio = num_models/num_regions
 
 peak_plot11 = dd.hvplot.heatmap(y='model',
                        x='region',
                        C='peak',
                        hover_cols = ['img'],
                        tools = [hover],
-                       height = adjusted_height,
-                       width = adjusted_width,
+                       frame_width = 100 * num_models,
+                       aspect = aspect_ratio,
                        colorbar=True,
                        clabel = 'peak day',
                        xaxis='top',
