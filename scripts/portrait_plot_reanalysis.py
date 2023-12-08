@@ -90,8 +90,8 @@ num_models = len(dd['model'].unique())
 num_regions = len(dd['region'].unique())
 aspect_ratio = num_models/num_regions
 
-peak_plot11 = dd.hvplot.heatmap(y='model',
-                       x='region',
+peak_plot11 = dd.hvplot.heatmap(x='model',
+                       y='region',
                        C='peak',
                        hover_cols = ['img'],
                        tools = [hover],
@@ -112,4 +112,4 @@ peak_plot11 = peak_plot11 * hv.Labels(peak_plot11)
 
 plt.show()
 
-hvplot.save(peak_plot11, 'charts/peak_plot17.html')
+hvplot.save(peak_plot11, 'charts/test2.html')
