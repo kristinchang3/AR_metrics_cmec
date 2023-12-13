@@ -8,6 +8,8 @@ import hvplot.pandas
 from PIL import Image
 import os, os.path
 from bokeh.models import HoverTool
+from bokeh.models import Label
+import math
 
 #angle = np.array([[  0,  86, 199],
 #       [ 23, 111, 271],
@@ -98,23 +100,42 @@ num_models = len(dd['model'].unique())
 num_regions = len(dd['region'].unique())
 aspect_ratio = num_models/num_regions
 
-peak_plot11 = dd.hvplot.heatmap(x='model',
-                       y='region',
+# Define hook function to adjust clabel position
+def adjust_clabel(plot, element):
+    color_bar = plot.state.right[0]
+    color_bar.title = '' # removes default title
+    # create a custom title
+    label = Label(x=100*num_models + 80,
+                  y=((100*num_regions)/2) + 20,
+                  angle=-math.pi/2,
+                  x_units='screen',
+                  y_units='screen',
+                  text='peak day',
+                  render_mode='css',
+                  text_font_size='10pt',
+                  text_font_style='normal'
+                  )
+    plot.state.add_layout(label)
+
+peak_plot11 = dd.hvplot.heatmap(y='region',
+                       x='model',
                        C='peak',
                        hover_cols = ['img'],
                        tools = [hover],
-                       frame_width = 100 * num_models,
+                       frame_height = 100 * num_regions,
                        aspect = aspect_ratio,
-                       colorbar=True,
-                       clabel = 'peak day bias',
                        xaxis='top',
                        clim = (-180,180),
-#                       cmap='blues').opts(xrotation=45, fontsize={
-                       cmap='RdBu_r').opts(xrotation=45, fontsize={
-                           'labels': 14,
-                           'xticks': 14,
-                           'yticks': 14
-                       })
+                       cmap='RdBu_r'
+                       ).opts(xrotation=45,
+                              fontsize={
+                                  'labels':10,
+                                  'xticks': 10, 
+                                  'yticks': 10
+                                  },
+                                  colorbar = True,
+                                  hooks=[adjust_clabel]
+                                  )
 
 peak_plot11 = peak_plot11 * hv.Labels(peak_plot11)
 
