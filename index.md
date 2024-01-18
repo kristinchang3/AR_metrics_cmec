@@ -17,13 +17,13 @@ This is an internal test page with an interactive data visualization.
 </div>
 <div style="text-align: center;" markdown="1">
 # AR Regions 
-### MJJAS 
+## MJJAS 
 <p align="center">
   <img src="images/MJJAS.png" width="400"/>
 </p>
 </div>
 <div style="text-align: center;" markdown="1">
-### NDJFM 
+## NDJFM 
 <p align="center">
   <img src="images/NDJFM.png" width="400"/>
 </p>
