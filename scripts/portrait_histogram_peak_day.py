@@ -167,7 +167,7 @@ def adjust_clabel(plot, element):
                   x_units='screen',
                   y_units='screen',
                   text='days',
-                  render_mode='css',
+#                  render_mode='css',
                   text_font_size='10pt',
                   text_font_style='normal'
                   )
