@@ -153,7 +153,8 @@ hover = HoverTool(tooltips="""
 # Use number of models and regions to determine cell size
 num_models = len(dd['model'].unique())
 num_regions = len(dd['region'].unique())
-aspect_ratio = num_models/num_regions
+#aspect_ratio = num_models/num_regions
+aspect_ratio = num_regions/num_models
 
 # Define hook function to adjust clabel position
 def adjust_clabel(plot, element):
