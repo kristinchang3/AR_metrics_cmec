@@ -8,7 +8,7 @@ import hvplot.pandas
 from PIL import Image
 import os, os.path
 from bokeh.models import HoverTool
-from bokeh.models import Label
+from bokeh.models import HTMLLabel
 import math
 from scipy.stats import ttest_ind
 
@@ -161,13 +161,12 @@ def adjust_clabel(plot, element):
     color_bar = plot.state.right[0]
     color_bar.title = '' # removes default title
     # create a custom title
-    label = Label(y=100*num_models + 80,
+    label = HTMLLabel(y=100*num_models + 80,
                   x=((100*num_regions)/2) + 20,
                   angle=-math.pi/2,
                   x_units='screen',
                   y_units='screen',
                   text='days',
-#                  render_mode='css',
                   text_font_size='10pt',
                   text_font_style='normal'
                   )
@@ -194,7 +193,7 @@ peak_plot31 = dd.hvplot.heatmap(x='region',
                                   hooks=[adjust_clabel]
                                   )
 
-peak_plot31 = peak_plot31 * hv.Labels(peak_plot31)
+peak_plot31 = peak_plot31 * hv.Labels(peak_plot31).opts(text_color='black')
 
 plt.show()
 
