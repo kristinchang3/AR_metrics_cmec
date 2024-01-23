@@ -7,8 +7,7 @@ import holoviews as hv
 import hvplot.pandas
 from PIL import Image
 import os, os.path
-from bokeh.models import HoverTool
-from bokeh.models import HTMLLabel
+from bokeh.models import HoverTool, HTMLLabel, Rect, ColumnDataSource
 import math
 from scipy.stats import ttest_ind
 
@@ -172,6 +171,33 @@ def adjust_clabel(plot, element):
                   )
     plot.state.add_layout(label)
 
+def overlay_hatches(plot, element):
+    renderer = plot.state  # Access the Bokeh plot
+
+    # Determine the unique categories and their order on the x-axis
+    x_categories = element.dimension_values('model', expanded=False)
+    y_categories = element.dimension_values('region', expanded=False)
+
+    # Iterate over the data to find which cells meet the condition
+    rects_to_add = []
+    for idx, row in dd.iterrows():
+        if row['peak'] < 0:  # Condition for applying hatches
+            # Map the categorical values to their numerical positions
+            x_index = np.where(x_categories == row['model'])[0][0] + 0.5
+            y_index = np.where(y_categories == row['region'])[0][0] + 0.5
+            rects_to_add.append((x_index, y_index))
+
+    # Create a ColumnDataSource for the rectangles
+    source = ColumnDataSource(data={'model': [x for x, _ in rects_to_add],
+                                    'region': [y for _, y in rects_to_add],
+                                    'width': [0.95] * len(rects_to_add),  # Value of 1 moves hatch right on edge of square
+                                    'height': [0.95] * len(rects_to_add)})  
+
+    # Overlay hatched rectangles using Bokeh Rect glyph
+    rect_glyph = Rect(x='model', y='region', width='width', height='height',
+                      fill_alpha=0, line_color=None, hatch_pattern='/', hatch_color='gray')
+    renderer.add_glyph(source, rect_glyph)
+
 peak_plot31 = dd.hvplot.heatmap(x='region',
                        y='model',
                        C='peak',
@@ -190,7 +216,9 @@ peak_plot31 = dd.hvplot.heatmap(x='region',
                                   'yticks': 10
                                   },
                                   colorbar = True,
-                                  hooks=[adjust_clabel]
+                                  hooks=[adjust_clabel,
+                                         overlay_hatches
+                                         ]
                                   )
 
 peak_plot31 = peak_plot31 * hv.Labels(peak_plot31).opts(text_color='black')
