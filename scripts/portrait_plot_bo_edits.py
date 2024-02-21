@@ -7,7 +7,7 @@ import holoviews as hv
 import hvplot.pandas
 from PIL import Image
 import os, os.path
-from bokeh.models import HoverTool
+from bokeh.models import HoverTool, HTMLLabel, ColumnDataSource, Rect
 from bokeh.models import Label
 import math
 
@@ -85,11 +85,23 @@ dd['img'] = img_links
 # adjust pandas settings to view full column width
 pd.set_option('max_colwidth', 1000)
 
-# html for custom hover tool
-hover = HoverTool(tooltips="""
+# select reference dataset
+dd_ref = dd.loc[dd['model']=='ERA5']
+dd_cmap = dd.loc[dd['model']!='ERA5']
+
+# create custom hover tools to display histogram images
+hover_L = HoverTool(tooltips="""
     <div>
         <div>
-            <img src="@img" width=400 style="float: left; margin: 0px 15px 15px 0px; border="2"></img>
+            <img src="@img" width=500 style="float: left; margin: 0px 15px 15px 0px; border="2"></img>
+        </div>
+    </div>
+
+""")
+hover_R = HoverTool(tooltips="""
+    <div>
+        <div>
+            <img src="@img" width=500 style="float: right; margin: 0px 15px 15px 0px; border="2"></img>
         </div>
     </div>
 
@@ -104,29 +116,57 @@ aspect_ratio = num_models/num_regions
 def adjust_clabel(plot, element):
     color_bar = plot.state.right[0]
     color_bar.title = '' # removes default title
+    color_bar.major_label_text_font_size = '14pt' # adjust font size of colorbar tick labels
     # create a custom title
-    label = Label(x=100*num_models + 80,
+    label = HTMLLabel(x=100*num_models + 80,
                   y=((100*num_regions)/2) + 20,
                   angle=-math.pi/2,
                   x_units='screen',
                   y_units='screen',
                   text='peak day',
-                  render_mode='css',
-                  text_font_size='10pt',
+                  text_font_size='14pt',
                   text_font_style='normal'
                   )
     plot.state.add_layout(label)
+    
+# Define hook function to add hatch pattern
+def overlay_hatches(plot, element):
+    renderer = plot.state  # Access the Bokeh plot
 
-peak_plot11 = dd.hvplot.heatmap(y='region',
+    # Determine the unique categories and their order on the x-axis
+    x_categories = element.dimension_values('model', expanded=False)
+    y_categories = element.dimension_values('region', expanded=False)
+
+    # Iterate over the data to find which cells meet the condition
+    rects_to_add = []
+    for idx, row in dd_cmap.iterrows():
+        if row['peak'] < 0:  # Condition for applying hatches
+            # Map the categorical values to their numerical positions
+            x_index = np.where(x_categories == row['model'])[0][0] + 0.5
+            y_index = np.where(y_categories == row['region'])[0][0] + 0.5
+            rects_to_add.append((x_index, y_index))
+
+    # Create a ColumnDataSource for the rectangles
+    source = ColumnDataSource(data={'model': [x for x, _ in rects_to_add],
+                                    'region': [y for _, y in rects_to_add],
+                                    'width': [0.95] * len(rects_to_add),  # Adjust as needed
+                                    'height': [0.95] * len(rects_to_add)})  # Adjust as needed
+
+    # Overlay hatched rectangles using Bokeh Rect glyph
+    rect_glyph = Rect(x='model', y='region', width='width', height='height',
+                      fill_alpha=0, line_color=None, hatch_pattern='/', hatch_color='black', hatch_scale=20)
+    renderer.add_glyph(source, rect_glyph)
+
+peak_cmap = dd_cmap.hvplot.heatmap(y='region',
                        x='model',
                        C='peak',
                        hover_cols = ['img'],
-                       tools = [hover],
+                       tools = [hover_R],
                        frame_height = 100 * num_regions,
                        aspect = aspect_ratio,
                        xaxis='top',
                        clim = (-180,180),
-                       cmap='RdBu_r'
+                       cmap='twilight_shifted_r'
                        ).opts(xrotation=45,
                               fontsize={
                                   'labels':10,
@@ -134,11 +174,39 @@ peak_plot11 = dd.hvplot.heatmap(y='region',
                                   'yticks': 10
                                   },
                                   colorbar = True,
-                                  hooks=[adjust_clabel]
                                   )
+                       
+peak_ref = dd_ref.hvplot.heatmap(y='region',
+                       x='model',
+                       C='peak',
+                       frame_height = 100 * num_regions,
+                       aspect = aspect_ratio,
+                       xaxis='top',
+                       cmap= ['#FFFFFF', '#ffffff'],
+                       line_color='gray',
+                       line_width=0.5, 
+                       hover_cols='img',
+                       tools=[hover_L],
+                       ).opts(xrotation=45, 
+                              fontsize={
+                                  'labels':14,
+                                  'xticks': 14, 
+                                  'yticks': 14
+                                  },
+                              colorbar = False
+                              )
 
-peak_plot11 = peak_plot11 * hv.Labels(peak_plot11)
+# custom cmap for label text colors
+bins = [-180, -80, 0, 80, 180]
+label_colors = ['white','black','black','white']
+
+peak_ref = peak_ref * hv.Labels(peak_ref).opts(text_color='black')
+peak_cmap = peak_cmap * hv.Labels(peak_cmap).opts(text_color='peak',
+                                                  color_levels=bins,
+                                                  cmap=label_colors,
+                                                  )
+peak_plot = (peak_ref * peak_cmap).opts(hooks=[adjust_clabel, overlay_hatches])
 
 plt.show()
 
-hvplot.save(peak_plot11, 'charts/test.html')
+hvplot.save(peak_plot, 'charts/peak_test20240221.html')
