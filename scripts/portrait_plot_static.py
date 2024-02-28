@@ -63,12 +63,14 @@ trans = matplotlib.transforms.Affine2D().translate(x_shift, y_shift)
 hatch.set_transform(trans + hatch.get_transform())
 
 # Loop over data dimensions and create text annotations.
+text_color_above = 100
+text_color_below = -100
 for i in range(len(regions)):
     for j in range(len(models)):
-        if j>0 and angle.T[i,j] >100:
+        if j>0 and angle.T[i,j] > text_color_above:
             text = ax.text(j, i, angle.T[i, j],
                         ha="center", va="center", color="w")
-        elif j>0 and angle.T[i,j] <-100:
+        elif j>0 and angle.T[i,j] < text_color_below:
             text = ax.text(j, i, angle.T[i, j],
                         ha="center", va="center", color="w")
         else:
