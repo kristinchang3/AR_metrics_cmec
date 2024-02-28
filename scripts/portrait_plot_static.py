@@ -29,8 +29,8 @@ custom_cmap = colors.ListedColormap(['white','white'])
 fig, ax = plt.subplots(figsize=(6, 8))
 
 # Plot reference and model data on separate heatmaps using pcolormesh()
-plt.pcolormesh(models[0], regions, angle.T[:,0:1], cmap=custom_cmap)
-plt.pcolormesh(models[1:], regions, angle.T[:,1:], cmap='twilight_shifted_r')
+plt.pcolormesh(models[0], regions, angle.T[:,0:1], cmap=custom_cmap, vmin=-180, vmax=180)
+plt.pcolormesh(models[1:], regions, angle.T[:,1:], cmap='twilight_shifted_r', vmin=-180, vmax=180)
 
 ax.set_xticks(np.arange(len(models)),labels=models, minor=False) # set xaxis labels
 ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False) # move xaxis labels to the top
@@ -77,7 +77,7 @@ for i in range(len(regions)):
             
 # add plot elements
 ax.set_aspect(1) # set square cells
-plt.colorbar().set_label('peak day', rotation=270)
+plt.colorbar().set_label('peak day', rotation=270, labelpad=10)
 #ax.set_title('AR Peak Day Difference', pad=30)
 ax.set_xlabel('Model')
 ax.xaxis.set_label_position('top')
